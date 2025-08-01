@@ -1,9 +1,8 @@
 target/
-!.mvn/
 !target/noteworthy.war
 .git
 .gitignore
 Dockerfile
 README.md
-.idea/
 *.iml
+.idea/
