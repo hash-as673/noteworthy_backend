@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Your Notes</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+    <style>
+        /* Same styles as before, no changes needed */
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+            gap: 16px;
+        }
+
+        .note-card {
+            background: #fff;
+            border-radius: 16px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+            padding: 16px;
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+
+        .note-card:hover {
+            transform: scale(1.02);
+        }
+
+        .note-title {
+            font-size: 16px;
+            font-weight: 600;
+        }
+
+        .note-content {
+            display: none;
+            margin-top: 12px;
+            color: #444;
+            font-size: 14px;
+        }
+
+        .note-card.expanded .note-content {
+            display: block;
+        }
+
+        .actions {
+            margin-top: 10px;
+        }
+
+        .actions form {
+            display: inline;
+        }
+
+        .fab {
+            position: fixed;
+            bottom: 24px;
+            right: 24px;
+            width: 56px;
+            height: 56px;
+            background-color: #007aff;
+            color: white;
+            font-size: 32px;
+            border-radius: 50%;
+            border: none;
+            cursor: pointer;
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.3);
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 10;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.3);
+            justify-content: center;
+            align-items: center;
+        }
+
+        .modal-content {
+            background-color: white;
+            border-radius: 16px;
+            padding: 24px;
+            width: 90%;
+            max-width: 400px;
+        }
+
+        .modal-content label {
+            display: block;
+            margin-top: 12px;
+            font-size: 14px;
+        }
+
+        .modal-content input,
+        .modal-content textarea {
+            width: 100%;
+            padding: 10px;
+            margin-top: 4px;
+            border-radius: 10px;
+            border: 1px solid #ccc;
+        }
+
+        .modal-content button {
+            margin-top: 16px;
+        }
+    </style>
+</head>
+<body>
+
+<div class="navbar">
+    Your Notes
+    <form th:action="@{/logout}" method="post" style="float: right; margin-right: 20px;">
+        <button type="submit">Logout</button>
+    </form>
+</div>
+
+<div class="container">
+    <div class="grid">
+        <div class="note-card" th:each="note : ${notes}" onclick="toggleNote(this)">
+            <div class="note-title" th:text="${note.title}">Note Title</div>
+            <div class="note-content" th:text="${note.content}">Note content...</div>
+            <div class="actions" onclick="event.stopPropagation()">
+                <form th:action="@{'/notes/delete/' + ${note.id}}" method="post">
+                    <button type="submit">🗑️</button>
+                </form>
+                <a th:href="@{'/notes/edit/' + ${note.id}}">✏️ Edit</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Floating Action Button -->
+<button class="fab" onclick="openModal()">+</button>
+
+<!-- Modal for New Note -->
+<div class="modal" id="noteModal">
+    <div class="modal-content">
+        <form th:action="@{/notes}" method="post" th:object="${createNoteRequest}">
+            <label for="title">Title</label>
+            <input id="title" th:field="*{title}" required>
+
+            <label for="content">Content</label>
+            <textarea id="content" th:field="*{content}" rows="4" required></textarea>
+
+            <button type="submit">Save</button>
+            <button type="button" onclick="closeModal()">Cancel</button>
+        </form>
+    </div>
+</div>
+
+<script>
+    function toggleNote(card) {
+        card.classList.toggle('expanded');
+    }
+
+    function openModal() {
+        document.getElementById('noteModal').style.display = 'flex';
+    }
+
+    function closeModal() {
+        document.getElementById('noteModal').style.display = 'none';
+    }
+
+    // Close modal if clicked outside content
+    window.onclick = function(event) {
+        const modal = document.getElementById('noteModal');
+        if (event.target === modal) {
+            closeModal();
+        }
+    };
+</script>
+
+</body>
+</html>
