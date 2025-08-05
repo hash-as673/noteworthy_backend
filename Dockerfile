@@ -11,7 +11,7 @@ COPY src ./src
 RUN mvn -B clean package -DskipTests
 
 # 🚀 Stage 2: Deploy to JBoss EAP 8 on OpenShift with OpenJDK 17
-FROM registry.redhat.io/jboss-eap-8/eap8-openjdk17-builder-openshift-rhel8
+FROM registry.redhat.io/jboss-eap-8/eap8-openjdk17-runtime-openshift-rhel8
 
 # Copy WAR directly to deployments (OpenShift runtime will handle .dodeploy)
 COPY --from=builder /app/target/noteworthy.war /opt/eap/standalone/deployments/
