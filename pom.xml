@@ -127,7 +127,7 @@
 	</dependencies>
 
 	<build>
-		<finalName>ROOT</finalName> <!-- Important: deploy as ROOT.war -->
+		<finalName>noteworthy</finalName>
 		<plugins>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>

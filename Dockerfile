@@ -7,17 +7,17 @@ WORKDIR /app
 COPY pom.xml .
 COPY src ./src
 
-# Build WAR (output will be target/ROOT.war)
+# Build WAR (output will be target/noteworthy.war)
 RUN mvn -B clean package -DskipTests
 
 # 🚀 Stage 2: Deploy to JBoss EAP 8 on OpenShift with OpenJDK 17
 FROM registry.redhat.io/jboss-eap-8/eap8-openjdk17-builder-openshift-rhel8
 
 # Copy WAR directly to deployments
-COPY --from=builder /app/target/ROOT.war /opt/eap/standalone/deployments/
+COPY --from=builder /app/target/noteworthy.war /opt/eap/standalone/deployments/
 
 # Mark the WAR for deployment
-RUN touch /opt/eap/standalone/deployments/ROOT.war.dodeploy
+RUN touch /opt/eap/standalone/deployments/noteworthy.war.dodeploy
 
 # ✅ Ensure logs go to OpenShift logs
 ENV JAVA_OPTS_APPEND="-Djava.util.logging.manager=org.jboss.logmanager.LogManager"
