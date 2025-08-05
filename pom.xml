@@ -20,7 +20,7 @@
 	</properties>
 
 	<dependencies>
-		<!-- Basic Spring Boot Starter (exclude logback) -->
+		<!-- Core Starter (exclude logback for WildFly) -->
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter</artifactId>
@@ -32,7 +32,7 @@
 			</exclusions>
 		</dependency>
 
-		<!-- Web Starter without embedded Tomcat -->
+		<!-- Web Starter (exclude embedded Tomcat) -->
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-web</artifactId>
@@ -44,14 +44,17 @@
 			</exclusions>
 		</dependency>
 
+		<!-- WAR deployment (Tomcat provided) -->
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-tomcat</artifactId>
+			<scope>provided</scope>
+		</dependency>
+
+		<!-- Spring Modules -->
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-data-jpa</artifactId>
-		</dependency>
-
-		<dependency>
-			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-starter-thymeleaf</artifactId>
 		</dependency>
 
 		<dependency>
@@ -60,20 +63,20 @@
 		</dependency>
 
 		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-thymeleaf</artifactId>
+		</dependency>
+
+		<dependency>
 			<groupId>org.thymeleaf.extras</groupId>
 			<artifactId>thymeleaf-extras-springsecurity6</artifactId>
 		</dependency>
 
-		<!-- MSSQL JDBC Driver -->
+		<!-- SQL Server JDBC -->
 		<dependency>
 			<groupId>com.microsoft.sqlserver</groupId>
 			<artifactId>mssql-jdbc</artifactId>
 			<scope>runtime</scope>
-		</dependency>
-
-		<dependency>
-			<groupId>jakarta.validation</groupId>
-			<artifactId>jakarta.validation-api</artifactId>
 		</dependency>
 
 		<!-- JWT -->
@@ -95,6 +98,12 @@
 			<scope>runtime</scope>
 		</dependency>
 
+		<!-- Validation -->
+		<dependency>
+			<groupId>jakarta.validation</groupId>
+			<artifactId>jakarta.validation-api</artifactId>
+		</dependency>
+
 		<!-- Lombok -->
 		<dependency>
 			<groupId>org.projectlombok</groupId>
@@ -102,34 +111,24 @@
 			<scope>provided</scope>
 		</dependency>
 
-		<!-- Provided Tomcat for WAR deployment -->
-		<dependency>
-			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-starter-tomcat</artifactId>
-			<scope>provided</scope>
-		</dependency>
-
-		<!-- JUL to SLF4J Bridge -->
+		<!-- Logging bridge for JUL -> SLF4J (compile time required) -->
 		<dependency>
 			<groupId>org.slf4j</groupId>
 			<artifactId>jul-to-slf4j</artifactId>
 			<version>2.0.13</version>
-			<scope>runtime</scope>
 		</dependency>
 
-		<!-- SLF4J to JBoss Logging Adapter -->
+		<!-- Optional: Spring Boot Test (skip in Docker builds) -->
 		<dependency>
-			<groupId>org.jboss.slf4j</groupId>
-			<artifactId>slf4j-jboss-logmanager</artifactId>
-			<version>1.2.0.Final</version>
-			<scope>runtime</scope>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-test</artifactId>
+			<scope>test</scope>
 		</dependency>
 	</dependencies>
 
 	<build>
-		<finalName>noteworthy</finalName>
+		<finalName>ROOT</finalName> <!-- Important: deploy as ROOT.war -->
 		<plugins>
-			<!-- WAR Plugin -->
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-war-plugin</artifactId>
