@@ -13,14 +13,11 @@ RUN mvn -B clean package -DskipTests
 # 🚀 Stage 2: Deploy to JBoss EAP 8 on OpenShift with OpenJDK 17
 FROM registry.redhat.io/jboss-eap-8/eap8-openjdk17-builder-openshift-rhel8
 
-# Copy WAR directly to deployments
+# Copy WAR directly to deployments (OpenShift runtime will handle .dodeploy)
 COPY --from=builder /app/target/noteworthy.war /opt/eap/standalone/deployments/
 
-# Mark the WAR for deployment
-RUN touch /opt/eap/standalone/deployments/noteworthy.war.dodeploy
-
-# ✅ Ensure logs go to OpenShift logs
+# ✅ Enable logging in OpenShift
 ENV JAVA_OPTS_APPEND="-Djava.util.logging.manager=org.jboss.logmanager.LogManager"
 
-# Ports exposed
+# Expose ports
 EXPOSE 8080 9990
